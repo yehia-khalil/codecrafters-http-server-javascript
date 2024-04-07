@@ -29,6 +29,15 @@ const server = net.createServer((socket) => {
                 socket.end();
                 server.close();
                 break;
+            case "user-agent":
+                let agent = userAgent.split(" ")[1]
+                socket.write('HTTP/1.1 200 OK\r\n');
+                socket.write('Content-Type: text/plain\r\n');
+                socket.write(`Content-Length: ${agent?.length ?? 0}\r\n\r\n`);
+                socket.write(`${agent ? agent : ''} \r\n\r\n`);
+                socket.end();
+                server.close();
+                break;
             default:
                 socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
                 socket.end();
