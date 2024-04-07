@@ -10,11 +10,20 @@ const server = net.createServer((socket) => {
     socket.on("ready", () => {
         console.log("ready")
     })
-    socket.on('data', () => {
-        console.log("HTTP/1.1 200 OK\r\n\r\n")
-        socket.write('HTTP/1.1 200 OK\r\n\r\n');
-        socket.end();
-        server.close();
+    socket.on('data', (data) => {
+        let [request, host, userAgent, accept] = data.toString().split("\r\n");
+        switch (request.split(" ")[1]) {
+            case "/":
+                socket.write('HTTP/1.1 200 OK\r\n\r\n');
+                socket.end();
+                server.close();
+                break;
+            default:
+                socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+                socket.end();
+                server.close();
+
+        }
     })
     socket.on("close", () => {
         socket.end();
