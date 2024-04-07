@@ -12,9 +12,19 @@ const server = net.createServer((socket) => {
     })
     socket.on('data', (data) => {
         let [request, host, userAgent, accept] = data.toString().split("\r\n");
-        switch (request.split(" ")[1]) {
-            case "/":
+        let path = request.split(" ")[1];
+        let route = path.split("/");
+        switch (route[1]) {
+            case "":
                 socket.write('HTTP/1.1 200 OK\r\n\r\n');
+                socket.end();
+                server.close();
+                break;
+            case "echo":
+                socket.write('HTTP/1.1 200 OK\r\n');
+                socket.write('Content-Type: text/plain\r\n');
+                socket.write(`Content-Length: ${route[2]?.length ?? 0}\r\n\r\n`);
+                socket.write(`${route[2] ? route[2] : ''} \r\n\r\n`);
                 socket.end();
                 server.close();
                 break;
