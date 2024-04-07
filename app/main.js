@@ -21,10 +21,11 @@ const server = net.createServer((socket) => {
                 server.close();
                 break;
             case "echo":
+                let body = path.split("echo")[1]
                 socket.write('HTTP/1.1 200 OK\r\n');
                 socket.write('Content-Type: text/plain\r\n');
-                socket.write(`Content-Length: ${route[2]?.length ?? 0}\r\n\r\n`);
-                socket.write(`${route[2] ? route[2] : ''} \r\n\r\n`);
+                socket.write(`Content-Length: ${body?.length ?? 0}\r\n\r\n`);
+                socket.write(`${body ? body : ''} \r\n\r\n`);
                 socket.end();
                 server.close();
                 break;
